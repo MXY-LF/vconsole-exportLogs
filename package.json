@@ -1,6 +1,6 @@
 {
-  "name": "vconsole",
-  "version": "3.15.1",
+  "name": "vconsolelogs",
+  "version": "1.0.1",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "files": [
@@ -9,8 +9,8 @@
     "CHANGELOG*",
     "README*"
   ],
-  "main": "dist/vconsole.min.js",
-  "typings": "dist/vconsole.min.d.ts",
+  "main": "dist/vconsolelogs.min.js",
+  "typings": "dist/vconsolelogs.min.d.ts",
   "scripts": {
     "build": "webpack --mode=production --progress --env target=web",
     "build:wx": "webpack --mode=production --progress --env target=wx",

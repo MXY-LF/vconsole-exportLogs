@@ -2,7 +2,7 @@ import * as tool from "../lib/tool";
 import { VConsoleModel } from "../lib/model";
 import { contentStore } from "../core/core.model";
 import { getLogDatasWithFormatting } from "./logTool";
-import { VConsoleLogStore as Store } from "./log.store";
+import { vconsolelogstore as Store } from "./log.store";
 const safeStringify = require("fast-safe-stringify");
 /**********************************
  * Interfaces
@@ -305,11 +305,11 @@ export class VConsoleLogModel extends VConsoleModel {
       isGroupHeader?: 0 | 1 | 2;
       isGroupCollapsed?: boolean;
     } = {
-      type: "log",
-      origData: [],
-      isGroupHeader: 0,
-      isGroupCollapsed: false,
-    },
+        type: "log",
+        origData: [],
+        isGroupHeader: 0,
+        isGroupCollapsed: false,
+      },
     opt?: IVConsoleAddLogOptions
   ) {
     // get group
@@ -363,7 +363,7 @@ export class VConsoleLogModel extends VConsoleModel {
     } catch (e) {
       try {
         result = eval.call(window, cmd);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     this.addLog(

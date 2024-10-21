@@ -3,7 +3,7 @@
     "emitDeclarationOnly": true,
     "declaration": true,
     // "declarationDir": "./dist/typings",
-    "outFile": "dist/vconsole.min.d.ts",
+    "outFile": "dist/vconsolelogs.min.d.ts",
     "outDir": "./dist",
     "baseUrl": "./src",
     "rootDir": "./src",
@@ -17,5 +17,7 @@
     "sourceMap": true,
     "strict": false
   },
-  "include": ["./src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }

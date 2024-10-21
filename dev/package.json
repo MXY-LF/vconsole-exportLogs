@@ -1,5 +1,5 @@
 {
-  "name": "vconsole-dev",
+  "name": "vconsolelogs-dev",
   "version": "0.0.1",
   "description": "",
   "main": "script/index.js",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "jsdom": "^19.0.0",
-    "vconsole": "file:../"
+    "vconsolelogs": "file:../"
   },
   "devDependencies": {
     "ts-node": "^10.4.0"

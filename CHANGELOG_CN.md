@@ -213,7 +213,7 @@
 
 - `Feat(Log)` 显示 audio 资源加载失败的报错。 (PR #419 by @zimv)
 - `Feat(Storage)` 重写 Storage 面板，现支持添加/编辑/删除内容。 (PR #429 by @ManiaciaChao)
-- `Feat(Plugin)` 新增第三方插件 [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)。 (by @vadxq)
+- `Feat(Plugin)` 新增第三方插件 [vite-plugin-vconsolelogs](https://github.com/vadxq/vite-plugin-vconsolelogs)。 (by @vadxq)
 - `Refactor(Core)` 开始使用 Svelte 作为模板引擎。 (PR #429 by @ManiaciaChao)
 - `Refactor(Core|Element)` 转换 core 文件及 Element 面板为 `.ts` 文件。
 - `Fix(Log)` 修复打印无 `toJSON` 方法的对象（如 `Vue` 实例）时会报错的问题。 (PR #431 by @sillyhong)
@@ -283,7 +283,7 @@
 ## 3.5.0 (2021-04-28)
 
 - `Feature(Log)` 新增复制单行日志的能力。 (by @akai)
-- `Feature(Plugin)` 新第三方插件 [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)。 (by @Zippowxk)
+- `Feature(Plugin)` 新第三方插件 [vconsolelogs-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsolelogs-devtools)。 (by @Zippowxk)
 - `Perf(System)` 将 "System" 字段改名为 "Client"，并新增 `MacOS` 系统版本号。
 - `Fix(Log)` 使用自然排序来排序 object 和 array 的键值。 (issue #372)
 - `Fix(Network)` 修复当 `contentType` 为 `text/html` 时潜在的 JSON 错误。 (by @zimv)
@@ -309,7 +309,7 @@
 - `Feature(Network)`支持 `fetch` 网络记录。(by @weiqian93)
 - `Feature(Network)` 支持显示 Request Headers。
 - `Feature(Network)` 仅显示简短网址，URL 参数将显示在详细信息中。(issue #291)
-- `Feature(Plugin)` 新第三方插件 [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)。(by @smackgg)
+- `Feature(Plugin)` 新第三方插件 [vconsolelogs-stats-plugin](https://github.com/smackgg/vConsole-Stats)。(by @smackgg)
 - `Fix(Core)` 修复点击开关按钮后位置会被重置的问题。
 - `Fix(Core)` 修复 `document.documentElement.offsetHeight|offsetWidth` 在新浏览器中不够准确的问题。(by @littlee)
 - `Fix(Core)` 阻止用户事件派发到 readOnly 或 disabled 的 element 上。(by @norux)

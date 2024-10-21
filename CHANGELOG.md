@@ -214,7 +214,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 
 - `Feat(Log)` Show audio loading error log. (PR #419 by @zimv)
 - `Feat(Storage)` Rewrite Storage panel, supports add/edit/delete storage items. (PR #429 by @ManiaciaChao)
-- `Feat(Plugin)` New third-party plugin [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole). (by @vadxq)
+- `Feat(Plugin)` New third-party plugin [vite-plugin-vconsolelogs](https://github.com/vadxq/vite-plugin-vconsolelogs). (by @vadxq)
 - `Refactor(Core)` Use Svelte as template engine. (PR #429 by @ManiaciaChao)
 - `Refactor(Core|Element)` Convert core file and Element panel to `.ts` file.
 - `Fix(Log)` Fix error when print object(s) with no `toJSON` method such as `Vue` instance. (PR #431 by @sillyhong)
@@ -284,7 +284,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 ## 3.5.0 (2021-04-28)
 
 - `Feat(Log)` Add ability to copy a single line of logs. (by @akai)
-- `Feat(Plugin)` New third-party plugin [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools). (by @Zippowxk)
+- `Feat(Plugin)` New third-party plugin [vconsolelogs-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsolelogs-devtools). (by @Zippowxk)
 - `Perf(System)` Rename "System" field to "Client", and add `MacOS` version.
 - `Fix(Log)` Use natural sorting to sort object and array's keys. (issue #372)
 - `Fix(Network)` Fix JSON parse error when `contentType` is `text/html`. (by @zimv)
@@ -310,7 +310,7 @@ English | [简体中文](./CHANGELOG_CN.md)
 - `Feat(Network)` Add `fetch` log in Network tab. (by @weiqian93)
 - `Feat(Network)` Add Request Headers to Network tab.
 - `Feat(Network)` Use short URL and display parameters in Network tab. (issue #291)
-- `Feat(Plugin)` New third-party plugin [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
+- `Feat(Plugin)` New third-party plugin [vconsolelogs-stats-plugin](https://github.com/smackgg/vConsole-Stats). (by @smackgg)
 - `Fix(Core)` The position of the switch button will be reset by mistake when clicked.
 - `Fix(Core)` Fix `document.documentElement.offsetHeight|offsetWidth` is unreliable in newer browsers. (PR #314 by @littlee)
 - `Fix(Core)` Prevent dispatchEvent for disabled or readOnly elements. (PR #314 by @norux)

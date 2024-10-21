@@ -1,4 +1,4 @@
-import VConsole from 'vconsole';
+import VConsole from 'vconsolelogs';
 
 class MyPlugin extends VConsole.VConsolePlugin {
 

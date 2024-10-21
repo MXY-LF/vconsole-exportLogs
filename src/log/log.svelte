@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { onMount, onDestroy } from 'svelte';
   import { isMatchedFilterText } from './logTool';
-  import { VConsoleLogStore as Store } from './log.store';
+  import { vconsolelogstore as Store } from './log.store';
   import LogRow from './logRow.svelte';
   import LogCommand from './logCommand.svelte';
   import Style from './log.less';

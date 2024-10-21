@@ -8,11 +8,11 @@
 #### 使用 NPM 安装（推荐）
 
 ```bash
-$ npm install vconsole
+$ npm install vconsolelogs
 ```
 
 ```javascript
-import VConsole from 'vconsole';
+import VConsole from 'vconsolelogs';
 
 const vConsole = new VConsole();
 // 或者使用配置参数进行初始化
@@ -31,7 +31,7 @@ vConsole.destroy();
 或者，你可以用 CDN 来引入 vConsole：
 
 ```html
-<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+<script src="https://unpkg.com/vconsolelogs@latest/dist/vconsolelogs.min.js"></script>
 <script>
   // VConsole 会自动挂载到 `window.VConsole`
   var vConsole = new window.VConsole();
@@ -40,8 +40,8 @@ vConsole.destroy();
 
 可用的 CDN：
 
-- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
-- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+- https://unpkg.com/vconsolelogs@latest/dist/vconsolelogs.min.js
+- https://cdn.jsdelivr.net/npm/vconsolelogs@latest/dist/vconsolelogs.min.js
 
 
 ---

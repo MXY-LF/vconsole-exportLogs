@@ -26,7 +26,7 @@ For details, please see the screenshots below.
 
 ## Release Notes
 
-Latest version: [![npm version](https://img.shields.io/npm/v/vconsole/latest.svg)](https://www.npmjs.com/package/vconsole)
+Latest version: [![npm version](https://img.shields.io/npm/v/vconsolelogs/latest.svg)](https://www.npmjs.com/package/vconsolelogs)
 
 Detailed release notes for each version are available on [Changelog](./CHANGELOG.md).
 
@@ -41,11 +41,11 @@ For installation, there are 2 primary ways of adding vConsole to a project:
 #### Method 1: Using npm (Recommended)
 
 ```bash
-$ npm install vconsole
+$ npm install vconsolelogs
 ```
 
 ```javascript
-import VConsole from 'vconsole';
+import VConsole from 'vconsolelogs';
 
 const vConsole = new VConsole();
 // or init with options
@@ -61,7 +61,7 @@ vConsole.destroy();
 #### Method 2: Using CDN in HTML:
 
 ```html
-<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+<script src="https://unpkg.com/vconsolelogs@latest/dist/vconsolelogs.min.js"></script>
 <script>
   // VConsole will be exported to `window.VConsole` by default.
   var vConsole = new window.VConsole();
@@ -70,14 +70,14 @@ vConsole.destroy();
 
 Available CDN:
 
-- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
-- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+- https://unpkg.com/vconsolelogs@latest/dist/vconsolelogs.min.js
+- https://cdn.jsdelivr.net/npm/vconsolelogs@latest/dist/vconsolelogs.min.js
 
 ---
 
 ## Preview
 
-[http://wechatfe.github.io/vconsole/demo.html](http://wechatfe.github.io/vconsole/demo.html)
+[http://wechatfe.github.io/vconsolelogs/demo.html](http://wechatfe.github.io/vconsolelogs/demo.html)
 
 ![](./doc/screenshot/qrcode.png)
 
@@ -175,11 +175,11 @@ Custom Plugin:
 ## Third-party Plugins
 
  - [vConsole-sources](https://github.com/WechatFE/vConsole-sources)
- - [vconsole-webpack-plugin](https://github.com/diamont1001/vconsole-webpack-plugin)
- - [vconsole-stats-plugin](https://github.com/smackgg/vConsole-Stats)
- - [vconsole-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsole-devtools)
- - [vconsole-outputlog-plugin](https://github.com/sunlanda/vconsole-outputlog-plugin)
- - [vite-plugin-vconsole](https://github.com/vadxq/vite-plugin-vconsole)
+ - [vconsolelogs-webpack-plugin](https://github.com/diamont1001/vconsolelogs-webpack-plugin)
+ - [vconsolelogs-stats-plugin](https://github.com/smackgg/vConsole-Stats)
+ - [vconsolelogs-vue-devtools-plugin](https://github.com/Zippowxk/vue-vconsolelogs-devtools)
+ - [vconsolelogs-outputlog-plugin](https://github.com/sunlanda/vconsolelogs-outputlog-plugin)
+ - [vite-plugin-vconsolelogs](https://github.com/vadxq/vite-plugin-vconsolelogs)
 
 ---
 

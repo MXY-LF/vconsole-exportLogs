@@ -47,7 +47,7 @@ module.exports = (env, argv) => {
     mode: argv.mode,
     devtool: false,
     entry: {
-      vconsole: Path.resolve(__dirname, './src/vconsole.ts'),
+      vconsolelogs: Path.resolve(__dirname, './src/vconsolelogs.ts'),
     },
     target: ['web', 'es5'],
     output: {

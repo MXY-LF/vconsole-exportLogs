@@ -2,22 +2,22 @@ import { writable, get } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import type { IVConsoleLog } from './log.model';
 
-export interface IVConsoleLogStore {
+export interface Ivconsolelogstore {
   logList: IVConsoleLog[];
 }
 
 /**
  * Log Store Factory
  */
-export class VConsoleLogStore {
-  public static storeMap: { [pluginId: string]: Writable<IVConsoleLogStore> } = {};
+export class vconsolelogstore {
+  public static storeMap: { [pluginId: string]: Writable<Ivconsolelogstore> } = {};
 
   /**
    * Create a store.
    */
   public static create(pluginId: string) {
     if (!this.storeMap[pluginId]) {
-      this.storeMap[pluginId] = writable<IVConsoleLogStore>({ logList: [] });
+      this.storeMap[pluginId] = writable<Ivconsolelogstore>({ logList: [] });
     }
     return this.storeMap[pluginId];
   }

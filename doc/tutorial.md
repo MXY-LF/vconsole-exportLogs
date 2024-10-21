@@ -9,11 +9,11 @@ Tutorial
 #### Install using npm (Recommanded)
 
 ```bash
-$ npm install vconsole
+$ npm install vconsolelogs
 ```
 
 ```javascript
-import VConsole from 'vconsole';
+import VConsole from 'vconsolelogs';
 
 const vConsole = new VConsole();
 // or init with options
@@ -32,7 +32,7 @@ vConsole.destroy();
 Otherwise, you can use CDN to import vConsole:
 
 ```html
-<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+<script src="https://unpkg.com/vconsolelogs@latest/dist/vconsolelogs.min.js"></script>
 <script>
   // VConsole will be exported to `window.VConsole` by default.
   var vConsole = new window.VConsole();
@@ -41,8 +41,8 @@ Otherwise, you can use CDN to import vConsole:
 
 Available CDN:
 
-- https://unpkg.com/vconsole@latest/dist/vconsole.min.js
-- https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js
+- https://unpkg.com/vconsolelogs@latest/dist/vconsolelogs.min.js
+- https://cdn.jsdelivr.net/npm/vconsolelogs@latest/dist/vconsolelogs.min.js
 
 ---
 

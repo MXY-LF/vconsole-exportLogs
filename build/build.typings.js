@@ -4,7 +4,7 @@ const vendorConfig = require('./vendor.json');
 
 const main = () => {
   console.group('\nEmitting type declarations...');
-  const distFile = './dist/vconsole.min.d.ts';
+  const distFile = './dist/vconsolelogs.min.d.ts';
   if (fs.existsSync(distFile)) {
     fs.unlinkSync(distFile);
   }
