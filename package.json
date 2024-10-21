@@ -39,6 +39,7 @@
     "@babel/runtime": "^7.17.2",
     "copy-text-to-clipboard": "^3.0.1",
     "core-js": "^3.11.0",
+    "fast-safe-stringify": "^2.1.1",
     "mutation-observer": "^1.0.3"
   },
   "devDependencies": {

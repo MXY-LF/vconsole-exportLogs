@@ -8,6 +8,7 @@ import NetworkComp from "./network.svelte";
 import { VConsoleNetworkModel } from "./network.model";
 import { VConsoleNetworkExporter } from "./network.exporter";
 import copy from 'copy-text-to-clipboard';
+const safeStringify = require("fast-safe-stringify");
 const MAX_NETWORK_NUMBER = 1000;
 
 export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
@@ -42,7 +43,7 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
         name: "CopyLogs",
         global: false,
         onClick: (e) => {
-          copy(JSON.stringify(this.model.RequestList));
+          copy(safeStringify(this.model.RequestList));
           // this.model.clearPluginLog(this.id);
           // this.vConsole.triggerEvent("clearLog");
         },
@@ -68,7 +69,7 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   public exportLog() {
     function downloadObjectAsJson(obj, filename) {
       // 将对象转换为 JSON 字符串
-      const jsonString = JSON.stringify(obj);
+      const jsonString = safeStringify(obj);
 
       // const logsContent = `\
       //     const logs = ${jsonString};
