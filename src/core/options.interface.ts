@@ -1,11 +1,13 @@
 export interface VConsoleLogOptions {
   maxLogNumber?: number;
   showTimestamps?: boolean;
+  exportMethod?: string[]
 }
 
 export interface VConsoleNetworkOptions {
   maxNetworkNumber?: number;
   ignoreUrlRegExp?: RegExp;
+  exportUrlRegExp?: RegExp;
 }
 
 export type VConsoleAvailableStorage = 'cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage';

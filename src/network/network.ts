@@ -110,6 +110,9 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     if (this.vConsole.option.network?.ignoreUrlRegExp) {
       this.model.ignoreUrlRegExp = this.vConsole.option.network.ignoreUrlRegExp;
     }
+    if (this.vConsole.option.network?.exportUrlRegExp) {
+      this.model.exportUrlRegExp = this.vConsole.option.network.exportUrlRegExp;
+    }
 
   }
 }

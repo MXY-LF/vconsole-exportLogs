@@ -57,7 +57,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
       return;
     }
 
-    if (!url.startsWith("https")) {
+    if (url && this.exportUrlRegExp?.test(url)) {
       const hasItem = !!this.RequestList[id];
       if (hasItem) {
         // force re-assign to ensure that the value is updated
