@@ -1,7 +1,13 @@
+/*
+ * @Description: 
+ * @Author: mengxiangyu
+ * @Date: 2025-03-11 17:10:23
+ */
 export interface VConsoleLogOptions {
   maxLogNumber?: number;
   showTimestamps?: boolean;
   exportMethod?: string[]
+  uploadUrl?: string;
 }
 
 export interface VConsoleNetworkOptions {

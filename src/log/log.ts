@@ -3,8 +3,11 @@ import LogComp from "./log.svelte";
 import { VConsoleLogModel } from "./log.model";
 import { VConsoleLogExporter } from "./log.exporter";
 import type { IConsoleLogMethod } from "./log.model";
-import copy from 'copy-text-to-clipboard';
+import copy from "copy-text-to-clipboard";
 import * as tool from "../lib/tool";
+import UploadDialog from "./UploadDialog.svelte";
+import { SvelteComponentTyped } from "svelte";
+import { VConsoleOptions } from "../core/options.interface";
 const safeStringify = require("fast-safe-stringify");
 const MAX_LOG_NUMBER = 1000;
 
@@ -12,23 +15,21 @@ const MAX_LOG_NUMBER = 1000;
  * vConsole Log Plugin (base class).
  */
 export class VConsoleLogPlugin extends VConsoleSveltePlugin {
-  public model: VConsoleLogModel = VConsoleLogModel.getSingleton(
-    VConsoleLogModel,
-    "VConsoleLogModel"
-  );
+  public model: VConsoleLogModel;
   public isReady: boolean = false;
   public isShow: boolean = false;
   public isInBottom: boolean = true; // whether the panel is in the bottom
 
-  constructor(id: string, name: string) {
+  constructor(id: string, name: string, options: VConsoleOptions) {
     super(id, name, LogComp, { pluginId: id, filterType: "all" });
+    this.model = new VConsoleLogModel(options);
     this.model.bindPlugin(id);
     this.exporter = new VConsoleLogExporter(id);
   }
 
   public onReady() {
     super.onReady();
-    this.onUpdateOption()
+    this.onUpdateOption();
   }
 
   public onRemove() {
@@ -65,22 +66,40 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
   public onAddTool(callback: Function) {
     const toolList = [
       {
-        name: "ExportLogs",
+        name: "Upload",
         global: false,
         onClick: (e) => {
-          this.exportLog();
-          // this.model.clearPluginLog(this.id);
-          // this.vConsole.triggerEvent("clearLog");
-        },
-      },
-      {
-        name: "CopyLog",
-        global: false,
-        onClick: (e) => {
-          copy(safeStringify(this.model.exportLogs));
-          // this.exportCurrentHtml();
-          // this.model.clearPluginLog(this.id);
-          // this.vConsole.triggerEvent("clearLog");
+          const uploadDialog = new UploadDialog({
+            target: document.body, // 直接设置为 body
+            props: {
+              visible: true,
+              progress: 0,
+              uploadUrl: "",
+              onClose: () => {
+                uploadDialog.$destroy();
+              },
+            },
+          });
+
+          this.model
+            .uploadLogs((progress) => {
+              uploadDialog.$set({ progress });
+            })
+            .then((url) => {
+              uploadDialog.$set({
+                uploadUrl: url || "https://example.com/logs/12345",
+              });
+            })
+            .catch((error) => {
+              console.error("Upload failed:", error);
+              uploadDialog.$set({
+                uploadUrl: "上传失败，请重试。",
+              });
+              this.model.addLog({
+                type: "error",
+                origData: [`上传失败: ${error.message}`],
+              });
+            });
         },
       },
       {
@@ -115,7 +134,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
         Number(this.vConsole.option.log?.maxLogNumber) || MAX_LOG_NUMBER;
     }
     if (this.vConsole.option.log?.exportMethod) {
-      this.model.exportMethod = this.vConsole.option.log?.exportMethod
+      this.model.exportMethod = this.vConsole.option.log?.exportMethod;
     }
 
     if (
@@ -175,8 +194,6 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
     downloadObjectAsJson(log, `log.json`);
     // this.exportJsonToFile(this.model.exportLogs, `log.json`);
   }
-
-
 }
 
 export default VConsoleLogPlugin;

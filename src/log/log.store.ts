@@ -1,6 +1,11 @@
-import { writable, get } from 'svelte/store';
-import type { Writable } from 'svelte/store';
-import type { IVConsoleLog } from './log.model';
+/*
+ * @Description:
+ * @Author: mengxiangyu
+ * @Date: 2025-03-11 17:10:23
+ */
+import { writable, get } from "svelte/store";
+import type { Writable } from "svelte/store";
+import type { IVConsoleLog } from "./log.model";
 
 export interface Ivconsolelogstore {
   logList: IVConsoleLog[];
@@ -10,7 +15,8 @@ export interface Ivconsolelogstore {
  * Log Store Factory
  */
 export class vconsolelogstore {
-  public static storeMap: { [pluginId: string]: Writable<Ivconsolelogstore> } = {};
+  public static storeMap: { [pluginId: string]: Writable<Ivconsolelogstore> } =
+    {};
 
   /**
    * Create a store.
@@ -26,7 +32,9 @@ export class vconsolelogstore {
    * Delete a store.
    */
   public static delete(pluginId: string) {
-    if (!this.storeMap[pluginId]) { return; }
+    if (!this.storeMap[pluginId]) {
+      return;
+    }
     delete this.storeMap[pluginId];
   }
 
@@ -50,5 +58,4 @@ export class vconsolelogstore {
   public static getAll() {
     return this.storeMap;
   }
-
 }

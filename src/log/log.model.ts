@@ -3,6 +3,10 @@ import { VConsoleModel } from "../lib/model";
 import { contentStore } from "../core/core.model";
 import { getLogDatasWithFormatting } from "./logTool";
 import { vconsolelogstore as Store } from "./log.store";
+import { get } from "svelte/store";
+import { requestList } from "../network/network.model";
+import { storageStore } from "../storage/storage.model";
+import { VConsoleOptions } from "../core/options.interface";
 const safeStringify = require("fast-safe-stringify");
 /**********************************
  * Interfaces
@@ -39,11 +43,19 @@ export interface IVConsoleAddLogOptions {
   cmdType?: "input" | "output";
 }
 
+export interface IVConsoleLogModel {
+  uploadLogs(): Promise<void>;
+}
+
 /**********************************
  * Model
  **********************************/
 
 export class VConsoleLogModel extends VConsoleModel {
+  constructor(private options: VConsoleOptions) {
+    super();
+  }
+
   public readonly LOG_METHODS: IConsoleLogMethod[] = [
     "log",
     "info",
@@ -57,7 +69,7 @@ export class VConsoleLogModel extends VConsoleModel {
   protected groupLevel: number = 0; // for `console.group()`
   protected groupLabelCollapsedStack: { label: symbol; collapsed: boolean }[] =
     [];
-  public exportMethod: string[] = ["debug"];
+  public exportMethod: string[] = ["debug", "info", "warn", "error"];
   protected pluginPattern: RegExp;
   protected logQueue: IVConsoleLog[] = [];
   protected flushLogScheduled: boolean = false;
@@ -305,11 +317,11 @@ export class VConsoleLogModel extends VConsoleModel {
       isGroupHeader?: 0 | 1 | 2;
       isGroupCollapsed?: boolean;
     } = {
-        type: "log",
-        origData: [],
-        isGroupHeader: 0,
-        isGroupCollapsed: false,
-      },
+      type: "log",
+      origData: [],
+      isGroupHeader: 0,
+      isGroupCollapsed: false,
+    },
     opt?: IVConsoleAddLogOptions
   ) {
     // get group
@@ -363,7 +375,7 @@ export class VConsoleLogModel extends VConsoleModel {
     } catch (e) {
       try {
         result = eval.call(window, cmd);
-      } catch (e) { }
+      } catch (e) {}
     }
 
     this.addLog(
@@ -497,5 +509,172 @@ export class VConsoleLogModel extends VConsoleModel {
       return logList.slice(len - maxLen, len);
     }
     return logList;
+  }
+
+  /**
+   * Upload console logs, API data, and storage data
+   */
+  public async uploadLogs(
+    onProgress?: (progress: number) => void
+  ): Promise<string> {
+    try {
+      // 通知开始上传
+      onProgress?.(0);
+
+      // 获取日志数据
+      const logStores = Store.getAll();
+      const consoleLogs = {};
+
+      // 收集日志数据
+      for (const pluginId in logStores) {
+        const storeData = Store.getRaw(pluginId);
+        if (storeData && Array.isArray(storeData.logList)) {
+          consoleLogs[pluginId] = storeData.logList.map((log) => ({
+            type: log.type,
+            data: log.data,
+            date: log.date,
+            repeated: log.repeated,
+            cmdType: log.cmdType,
+            groupLevel: log.groupLevel,
+            groupHeader: log.groupHeader,
+            groupCollapsed: log.groupCollapsed,
+          }));
+        }
+      }
+
+      // 获取网络请求数据
+      const networkData = get(requestList);
+
+      // 获取存储相关数据
+      const defaultStorages = get(storageStore.defaultStorages);
+      const activedStorage = get(storageStore.activedName);
+      const storageUpdateTime = get(storageStore.updateTime);
+
+      // 收集所有数据
+      const logData = {
+        console: consoleLogs, // 控制台日志
+        network: networkData, // 网络请求数据
+        storage: {
+          defaultStorages,
+          activedStorage,
+          updateTime: storageUpdateTime,
+          data: {
+            localStorage: this._getLocalStorageData(),
+            sessionStorage: this._getSessionStorageData(),
+            cookies: this._getCookieData(),
+          },
+        },
+        system: {
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+        },
+      };
+
+      // 使用配置中的上传端点
+      const UPLOAD_ENDPOINT =
+        this.options?.log?.uploadUrl || "https://default-endpoint.com/logs";
+
+      // 使用 FormData 来上传，支持进度监控
+      const formData = new FormData();
+      const blob = new Blob([JSON.stringify(logData)], {
+        type: "application/json",
+      });
+      formData.append("logs", blob);
+
+      // 发送到服务器
+      const xhr = new XMLHttpRequest();
+
+      // 设置进度监听
+      xhr.upload.addEventListener("progress", (e) => {
+        if (e.lengthComputable) {
+          const progress = (e.loaded / e.total) * 100;
+          onProgress?.(progress);
+        }
+      });
+
+      // 包装为 Promise
+      const uploadPromise = new Promise<Response>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(xhr.response);
+          } else {
+            reject(new Error(`上传失败: ${xhr.status}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("网络错误"));
+      });
+
+      // 开始上传
+      xhr.open("POST", UPLOAD_ENDPOINT);
+      xhr.setRequestHeader("Content-Type", "multipart/form-data");
+      xhr.send(formData);
+
+      // 修改返回值
+      const response = await uploadPromise;
+      onProgress?.(100);
+
+      // 假设服务器返回的数据中包含 url 字段
+      const result = await response.json();
+      return result.url; // 返回上传后的 URL
+    } catch (error) {
+      onProgress?.(0);
+      throw error;
+    }
+  }
+
+  /**
+   * 获取 localStorage 数据
+   */
+  private _getLocalStorageData(): Record<string, any> {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        try {
+          data[key] = localStorage.getItem(key);
+        } catch (e) {
+          data[key] = "[[Error reading value]]";
+        }
+      }
+    }
+    return data;
+  }
+
+  /**
+   * 获取 sessionStorage 数据
+   */
+  private _getSessionStorageData(): Record<string, any> {
+    const data = {};
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key) {
+        try {
+          data[key] = sessionStorage.getItem(key);
+        } catch (e) {
+          data[key] = "[[Error reading value]]";
+        }
+      }
+    }
+    return data;
+  }
+
+  /**
+   * 获取 Cookie 数据
+   */
+  private _getCookieData(): Record<string, string> {
+    const data = {};
+    try {
+      const cookies = document.cookie.split(";");
+      for (const cookie of cookies) {
+        const [key, value] = cookie.split("=").map((part) => part.trim());
+        if (key) {
+          data[key] = value || "";
+        }
+      }
+    } catch (e) {
+      data["error"] = "Error reading cookies";
+    }
+    return data;
   }
 }
