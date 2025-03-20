@@ -8,6 +8,7 @@ import { requestList } from "../network/network.model";
 import { storageStore } from "../storage/storage.model";
 import { VConsoleOptions } from "../core/options.interface";
 import pako from "pako";
+import { Base64 } from "js-base64";
 const safeStringify = require("fast-safe-stringify");
 /**********************************
  * Interfaces
@@ -570,7 +571,7 @@ export class VConsoleLogModel extends VConsoleModel {
         },
       };
 
-      // 压缩数据
+      // 压缩数据并转换为 Base64
       const compressedData = this.compressData(logData);
 
       // 使用配置中的上传端点
@@ -584,7 +585,7 @@ export class VConsoleLogModel extends VConsoleModel {
         headers: {
           "Content-Type": "application/json",
         },
-        body: compressedData,
+        body: JSON.stringify({ extra:  compressedData  }),
       });
 
       if (!response.ok) {
@@ -669,7 +670,9 @@ export class VConsoleLogModel extends VConsoleModel {
     });
 
     // 使用 pako 进行 gzip 压缩
-    const compressed = pako.gzip(jsonString, { to: "string" });
-    return compressed;
+    const compressed = pako.gzip(jsonString);
+
+    // 使用 js-base64 将压缩后的数据转换为 Base64
+    return Base64.fromUint8Array(compressed);
   }
 }

@@ -31,21 +31,10 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
   public onAddTool(callback) {
     const toolList = [
       {
-        name: "ExportLogs",
-        global: false,
-        onClick: (e) => {
-          this.exportLog();
-          // this.model.clearPluginLog(this.id);
-          // this.vConsole.triggerEvent("clearLog");
-        },
-      },
-      {
         name: "CopyLogs",
         global: false,
         onClick: (e) => {
           copy(safeStringify(this.model.RequestList));
-          // this.model.clearPluginLog(this.id);
-          // this.vConsole.triggerEvent("clearLog");
         },
       },
       {
@@ -66,38 +55,6 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     }
   }
 
-  public exportLog() {
-    function downloadObjectAsJson(obj, filename) {
-      // 将对象转换为 JSON 字符串
-      const jsonString = safeStringify(obj);
-
-      // const logsContent = `\
-      //     const logs = ${jsonString};
-      //     export default logs;
-      //       `;
-
-      // 创建一个 Blob 对象，使用 UTF-8 编码
-      const blob = new Blob([jsonString], { type: "application/json" });
-
-      // 创建一个可下载的链接
-      const downloadUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = downloadUrl;
-      a.download = filename;
-
-      // 触发下载
-      document.body.appendChild(a);
-      a.click();
-
-      // 清理
-      document.body.removeChild(a);
-      URL.revokeObjectURL(downloadUrl);
-    }
-    const log = this.model.RequestList;
-
-    downloadObjectAsJson(log, `network.json`);
-  }
-
   public onUpdateOption() {
     if (
       this.vConsole.option.network?.maxNetworkNumber !==
@@ -113,6 +70,5 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     if (this.vConsole.option.network?.exportUrlRegExp) {
       this.model.exportUrlRegExp = this.vConsole.option.network.exportUrlRegExp;
     }
-
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "vconsolelogs",
-  "version": "1.2.0",
+  "version": "1.2.6",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
   "homepage": "https://github.com/Tencent/vConsole",
   "files": [
@@ -40,6 +40,7 @@
     "copy-text-to-clipboard": "^3.0.1",
     "core-js": "^3.11.0",
     "fast-safe-stringify": "^2.1.1",
+    "js-base64": "^3.7.7",
     "mutation-observer": "^1.0.3",
     "pako": "^2.1.0"
   },

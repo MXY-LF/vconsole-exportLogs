@@ -32,7 +32,6 @@
     align-items: center;
     justify-content: center;
     z-index: 10000000;
-    padding: 20px;
   "
 >
   <div
@@ -44,7 +43,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       width: 80vw;
-      height: 200px;
+      height: 150px;
     "
   >
     <div class="success-content">
