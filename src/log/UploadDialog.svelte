@@ -32,6 +32,7 @@
     align-items: center;
     justify-content: center;
     z-index: 10000000;
+    padding: 20px;
   "
 >
   <div
@@ -42,8 +43,8 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      width: 100vw;
-      height: 400px;
+      width: 80vw;
+      height: 200px;
     "
   >
     <div class="success-content">
@@ -57,41 +58,51 @@
       >
         {#if uploadId}上传成功，ID: {uploadId}{:else}正在上传...{/if}
       </h3>
-      <button
-        class="copy-btn"
-        on:click={handleCopy}
+      <div
+        class="button-container"
         style="
-          background: #007bff;
-          color: #fff;
-          white-space: nowrap;
-          padding: 6px 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 14px;
-          transition: opacity 0.2s;
-        "
-        disabled={!uploadId}
-      >
-        {copied ? "已复制" : "复制链接"}
-      </button>
-      <button
-        class="close-btn"
-        on:click={onClose}
-        style="
-          background: #28a745;
-          color: white;
-          width: 100%;
-          padding: 6px 12px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 14px;
-          transition: opacity 0.2s;
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
         "
       >
-        关闭
-      </button>
+        <button
+          class="copy-btn"
+          on:click={handleCopy}
+          style="
+            flex: 1;
+            background: #007bff;
+            color: #fff;
+            white-space: nowrap;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.2s;
+          "
+          disabled={!uploadId}
+        >
+          {copied ? "已复制" : "复制链接"}
+        </button>
+        <button
+          class="close-btn"
+          on:click={onClose}
+          style="
+            flex: 1;
+            background: #28a745;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: opacity 0.2s;
+          "
+        >
+          关闭
+        </button>
+      </div>
     </div>
   </div>
 </div>

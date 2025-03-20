@@ -7,6 +7,7 @@ import { get } from "svelte/store";
 import { requestList } from "../network/network.model";
 import { storageStore } from "../storage/storage.model";
 import { VConsoleOptions } from "../core/options.interface";
+import pako from "pako";
 const safeStringify = require("fast-safe-stringify");
 /**********************************
  * Interfaces
@@ -517,7 +518,7 @@ export class VConsoleLogModel extends VConsoleModel {
   public async uploadLogs(
     onProgress?: (progress: number) => void
   ): Promise<string> {
-    let logData; // 在 try 块外部声明 logData
+    let logData;
     try {
       // 获取日志数据
       const logStores = Store.getAll();
@@ -569,13 +570,13 @@ export class VConsoleLogModel extends VConsoleModel {
         },
       };
 
+      // 压缩数据
+      const compressedData = this.compressData(logData);
+
       // 使用配置中的上传端点
       const UPLOAD_ENDPOINT =
         this.options?.log?.uploadUrl ||
         "http://localhost:25819/api/vconsolelog/record";
-
-      // 准备请求体
-      const requestBody = JSON.stringify({ extra: logData });
 
       // 发送到服务器
       const response = await fetch(UPLOAD_ENDPOINT, {
@@ -583,7 +584,7 @@ export class VConsoleLogModel extends VConsoleModel {
         headers: {
           "Content-Type": "application/json",
         },
-        body: requestBody,
+        body: compressedData,
       });
 
       if (!response.ok) {
@@ -597,7 +598,6 @@ export class VConsoleLogModel extends VConsoleModel {
 
       return result.data.id; // 返回上传后的 ID
     } catch (error) {
-      // 将 logData 附加到错误对象上
       const enhancedError = new Error(`上传失败: ${error.message}`);
       (enhancedError as any).logData = JSON.stringify(logData);
       throw enhancedError;
@@ -657,5 +657,19 @@ export class VConsoleLogModel extends VConsoleModel {
       data["error"] = "Error reading cookies";
     }
     return data;
+  }
+
+  private compressData(data: any): string {
+    const jsonString = JSON.stringify(data, (key, value) => {
+      // 去除不必要的字段
+      if (key === "largeField" || key === "unnecessaryField") {
+        return undefined;
+      }
+      return value;
+    });
+
+    // 使用 pako 进行 gzip 压缩
+    const compressed = pako.gzip(jsonString, { to: "string" });
+    return compressed;
   }
 }
