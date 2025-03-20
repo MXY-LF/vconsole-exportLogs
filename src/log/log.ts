@@ -73,8 +73,7 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
             target: document.body, // 直接设置为 body
             props: {
               visible: true,
-              progress: 0,
-              uploadUrl: "",
+              uploadId: "", // 初始化为空
               onClose: () => {
                 uploadDialog.$destroy();
               },
@@ -82,18 +81,19 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
           });
 
           this.model
-            .uploadLogs((progress) => {
-              uploadDialog.$set({ progress });
-            })
-            .then((url) => {
+            .uploadLogs()
+            .then((id) => {
               uploadDialog.$set({
-                uploadUrl: url || "https://example.com/logs/12345",
+                uploadId: id, // 设置上传成功后的 ID
               });
             })
             .catch((error) => {
               console.error("Upload failed:", error);
+              if ((error as any).logData) {
+                console.log("Log Data:", JSON.parse((error as any).logData));
+              }
               uploadDialog.$set({
-                uploadUrl: "上传失败，请重试。",
+                uploadId: "上传失败，请重试。",
               });
               this.model.addLog({
                 type: "error",

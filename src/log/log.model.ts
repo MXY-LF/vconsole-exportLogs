@@ -517,10 +517,8 @@ export class VConsoleLogModel extends VConsoleModel {
   public async uploadLogs(
     onProgress?: (progress: number) => void
   ): Promise<string> {
+    let logData; // 在 try 块外部声明 logData
     try {
-      // 通知开始上传
-      onProgress?.(0);
-
       // 获取日志数据
       const logStores = Store.getAll();
       const consoleLogs = {};
@@ -551,7 +549,7 @@ export class VConsoleLogModel extends VConsoleModel {
       const storageUpdateTime = get(storageStore.updateTime);
 
       // 收集所有数据
-      const logData = {
+      logData = {
         console: consoleLogs, // 控制台日志
         network: networkData, // 网络请求数据
         storage: {
@@ -573,53 +571,36 @@ export class VConsoleLogModel extends VConsoleModel {
 
       // 使用配置中的上传端点
       const UPLOAD_ENDPOINT =
-        this.options?.log?.uploadUrl || "https://default-endpoint.com/logs";
+        this.options?.log?.uploadUrl ||
+        "http://localhost:25819/api/vconsolelog/record";
 
-      // 使用 FormData 来上传，支持进度监控
-      const formData = new FormData();
-      const blob = new Blob([JSON.stringify(logData)], {
-        type: "application/json",
-      });
-      formData.append("logs", blob);
+      // 准备请求体
+      const requestBody = JSON.stringify({ extra: logData });
 
       // 发送到服务器
-      const xhr = new XMLHttpRequest();
-
-      // 设置进度监听
-      xhr.upload.addEventListener("progress", (e) => {
-        if (e.lengthComputable) {
-          const progress = (e.loaded / e.total) * 100;
-          onProgress?.(progress);
-        }
+      const response = await fetch(UPLOAD_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
       });
 
-      // 包装为 Promise
-      const uploadPromise = new Promise<Response>((resolve, reject) => {
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            resolve(xhr.response);
-          } else {
-            reject(new Error(`上传失败: ${xhr.status}`));
-          }
-        };
-        xhr.onerror = () => reject(new Error("网络错误"));
-      });
+      if (!response.ok) {
+        throw new Error(`上传失败: ${response.status}`);
+      }
 
-      // 开始上传
-      xhr.open("POST", UPLOAD_ENDPOINT);
-      xhr.setRequestHeader("Content-Type", "multipart/form-data");
-      xhr.send(formData);
-
-      // 修改返回值
-      const response = await uploadPromise;
-      onProgress?.(100);
-
-      // 假设服务器返回的数据中包含 url 字段
       const result = await response.json();
-      return result.url; // 返回上传后的 URL
+      if (result.code !== 200) {
+        throw new Error(`上传失败: ${result.message || "未知错误"}`);
+      }
+
+      return result.data.id; // 返回上传后的 ID
     } catch (error) {
-      onProgress?.(0);
-      throw error;
+      // 将 logData 附加到错误对象上
+      const enhancedError = new Error(`上传失败: ${error.message}`);
+      (enhancedError as any).logData = JSON.stringify(logData);
+      throw enhancedError;
     }
   }
 

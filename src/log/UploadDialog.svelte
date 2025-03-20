@@ -2,19 +2,20 @@
   import { fade } from "svelte/transition";
   import copy from "copy-text-to-clipboard";
 
-  export let progress: number = 0;
+  export let uploadId: string = "";
   export let visible: boolean = false;
-  export let uploadUrl: string = "";
   export let onClose: () => void;
 
   let copied = false;
 
   function handleCopy() {
-    copy(uploadUrl);
-    copied = true;
-    setTimeout(() => {
-      copied = false;
-    }, 2000);
+    if (uploadId) {
+      copy(uploadId);
+      copied = true;
+      setTimeout(() => {
+        copied = false;
+      }, 2000);
+    }
   }
 </script>
 
@@ -41,122 +42,57 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      width: 80vw;
-      height: 200px;
+      width: 100vw;
+      height: 400px;
     "
   >
-    {#if uploadUrl}
-      <div class="success-content">
-        <h3
-          style="
-            margin: 0 0 20px;
-            font-size: 16px;
-            color: #000;
-            text-align: center;
-          "
-        >
-          上传成功
-        </h3>
-        <div
-          class="url-container"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: #f0f0f0;
-            padding: 8px;
-            border-radius: 4px;
-          "
-        >
-          <span
-            class="url"
-            style="
-              flex: 1;
-              word-break: break-all;
-              font-size: 14px;
-              color: #000;
-            ">{uploadUrl}</span
-          >
-          <button
-            class="copy-btn"
-            on:click={handleCopy}
-            style="
-              background: #007bff;
-              color: #fff;
-              white-space: nowrap;
-              padding: 6px 12px;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 14px;
-              transition: opacity 0.2s;
-            "
-          >
-            {copied ? "已复制" : "复制链接"}
-          </button>
-        </div>
-        <button
-          class="close-btn"
-          on:click={onClose}
-          style="
-            background: #28a745;
-            color: white;
-            width: 100%;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: opacity 0.2s;
-          "
-        >
-          关闭
-        </button>
-      </div>
-    {:else}
-      <div class="progress-content">
-        <h3
-          style="
-            margin: 0 0 20px;
-            font-size: 16px;
-            color: #000;
-            text-align: center;
-          "
-        >
-          正在上传
-        </h3>
-        <div
-          class="progress-bar"
-          style="
-            height: 4px;
-            background: #e9ecef;
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 10px;
-          "
-        >
-          <div
-            class="progress-inner"
-            style="
-              height: 100%;
-              background: #28a745;
-              transition: width 0.3s ease;
-              width: {progress}%;
-            "
-          />
-        </div>
-        <span
-          class="progress-text"
-          style="
-            display: block;
-            text-align: center;
-            color: #000;
-            font-size: 14px;
-          ">{Math.round(progress)}%</span
-        >
-      </div>
-    {/if}
+    <div class="success-content">
+      <h3
+        style="
+          margin: 0 0 20px;
+          font-size: 16px;
+          color: #000;
+          text-align: center;
+        "
+      >
+        {#if uploadId}上传成功，ID: {uploadId}{:else}正在上传...{/if}
+      </h3>
+      <button
+        class="copy-btn"
+        on:click={handleCopy}
+        style="
+          background: #007bff;
+          color: #fff;
+          white-space: nowrap;
+          padding: 6px 12px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: opacity 0.2s;
+        "
+        disabled={!uploadId}
+      >
+        {copied ? "已复制" : "复制链接"}
+      </button>
+      <button
+        class="close-btn"
+        on:click={onClose}
+        style="
+          background: #28a745;
+          color: white;
+          width: 100%;
+          padding: 6px 12px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+          transition: opacity 0.2s;
+        "
+      >
+        关闭
+      </button>
+    </div>
   </div>
 </div>
 
