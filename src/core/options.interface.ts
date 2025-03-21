@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author: mengxiangyu
  * @Date: 2025-03-11 17:10:23
  */
@@ -8,12 +8,15 @@ export interface VConsoleLogOptions {
   showTimestamps?: boolean;
   exportMethod?: string[]
   uploadUrl?: string;
+  ignoreUrlRegExp?: RegExp;
+  uploadUrlReg?: RegExp;
 }
 
 export interface VConsoleNetworkOptions {
   maxNetworkNumber?: number;
   ignoreUrlRegExp?: RegExp;
   exportUrlRegExp?: RegExp;
+  uploadUrlReg?: RegExp;
 }
 
 export type VConsoleAvailableStorage = 'cookies' | 'localStorage' | 'sessionStorage' | 'wxStorage';

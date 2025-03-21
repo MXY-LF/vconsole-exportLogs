@@ -6,7 +6,7 @@ import { vconsolelogstore as Store } from "./log.store";
 import { get } from "svelte/store";
 import { requestList } from "../network/network.model";
 import { storageStore } from "../storage/storage.model";
-import { VConsoleOptions } from "../core/options.interface";
+import { VConsoleLogOptions, VConsoleOptions } from "../core/options.interface";
 import pako from "pako";
 import { Base64 } from "js-base64";
 const safeStringify = require("fast-safe-stringify");
@@ -517,6 +517,7 @@ export class VConsoleLogModel extends VConsoleModel {
    * Upload console logs, API data, and storage data
    */
   public async uploadLogs(
+    logOptions: VConsoleLogOptions,
     onProgress?: (progress: number) => void
   ): Promise<string> {
     let logData;
@@ -545,6 +546,15 @@ export class VConsoleLogModel extends VConsoleModel {
       // 获取网络请求数据
       const networkData = get(requestList);
 
+      // 过滤掉不匹配 uploadUrlReg 的请求
+      const filteredNetworkData = logOptions?.uploadUrlReg
+        ? Object.fromEntries(
+            Object.entries(networkData).filter(([id, request]) => {
+              return logOptions?.uploadUrlReg?.test(request.url);
+            })
+          )
+        : []; // 如果没有提供 uploadUrlReg，则使用原始数据
+
       // 获取存储相关数据
       const defaultStorages = get(storageStore.defaultStorages);
       const activedStorage = get(storageStore.activedName);
@@ -553,7 +563,7 @@ export class VConsoleLogModel extends VConsoleModel {
       // 收集所有数据
       logData = {
         console: consoleLogs, // 控制台日志
-        network: networkData, // 网络请求数据
+        network: filteredNetworkData, // 过滤后的网络请求数据
         storage: {
           defaultStorages,
           activedStorage,
@@ -576,8 +586,8 @@ export class VConsoleLogModel extends VConsoleModel {
 
       // 使用配置中的上传端点
       const UPLOAD_ENDPOINT =
-        this.options?.log?.uploadUrl ||
-        "http://localhost:25819/api/vconsolelog/record";
+        logOptions?.uploadUrl ||
+        "https://frontend-admin.weplayapp.com/api/vconsolelog/record";
 
       // 发送到服务器
       const response = await fetch(UPLOAD_ENDPOINT, {
@@ -585,7 +595,7 @@ export class VConsoleLogModel extends VConsoleModel {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ extra:  compressedData  }),
+        body: JSON.stringify({ extra: compressedData }),
       });
 
       if (!response.ok) {

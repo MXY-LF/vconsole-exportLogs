@@ -81,10 +81,10 @@ export class VConsoleLogPlugin extends VConsoleSveltePlugin {
           });
 
           this.model
-            .uploadLogs()
+            .uploadLogs(this.vConsole.option?.log)
             .then((id) => {
               uploadDialog.$set({
-                uploadId: id, // 设置上传成功后的 ID
+                uploadId: `https://frontend-admin.weplayapp.com/#/?tab=vconsolelog&id=${id}`, // 设置上传成功后的 ID
               });
             })
             .catch((error) => {

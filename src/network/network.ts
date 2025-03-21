@@ -1,7 +1,7 @@
 /*
  * @Descripttion:
  * @Author: xiangyumeng@webank.com
- * @LastEditTime: 2024-10-21 14:28:33
+ * @LastEditTime: 2025-03-21 11:45:56
  */
 import { VConsoleSveltePlugin } from "../lib/sveltePlugin";
 import NetworkComp from "./network.svelte";
@@ -30,13 +30,6 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
 
   public onAddTool(callback) {
     const toolList = [
-      {
-        name: "CopyLogs",
-        global: false,
-        onClick: (e) => {
-          copy(safeStringify(this.model.RequestList));
-        },
-      },
       {
         name: "Clear",
         global: false,
@@ -69,6 +62,9 @@ export class VConsoleNetworkPlugin extends VConsoleSveltePlugin {
     }
     if (this.vConsole.option.network?.exportUrlRegExp) {
       this.model.exportUrlRegExp = this.vConsole.option.network.exportUrlRegExp;
+    }
+    if (this.vConsole.option.network?.uploadUrlReg) {
+      this.model.uploadUrlReg = this.vConsole.option.network.uploadUrlReg;
     }
   }
 }

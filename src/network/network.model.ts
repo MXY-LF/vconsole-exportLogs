@@ -20,6 +20,7 @@ export class VConsoleNetworkModel extends VConsoleModel {
   public maxNetworkNumber: number = 1000;
   public ignoreUrlRegExp: RegExp = undefined;
   public exportUrlRegExp: RegExp = undefined;
+  public uploadUrlReg: RegExp = undefined;
   protected itemCounter: number = 0;
   public RequestList: any = {};
 
@@ -57,10 +58,9 @@ export class VConsoleNetworkModel extends VConsoleModel {
       return;
     }
 
-    if (url && this.exportUrlRegExp?.test(url)) {
+    if (url && this.uploadUrlReg?.test(url)) {
       const hasItem = !!this.RequestList[id];
       if (hasItem) {
-        // force re-assign to ensure that the value is updated
         const item = this.RequestList[id];
         for (let key in data) {
           item[key] = data[key];
@@ -74,7 +74,6 @@ export class VConsoleNetworkModel extends VConsoleModel {
     const reqList = get(requestList);
     const hasItem = !!reqList[id];
     if (hasItem) {
-      // force re-assign to ensure that the value is updated
       const item = reqList[id];
       for (let key in data) {
         item[key] = data[key];
@@ -83,8 +82,6 @@ export class VConsoleNetworkModel extends VConsoleModel {
     }
     requestList.update((reqList) => {
       reqList[id] = data;
-      // this.RequestList = reqList;
-
       return reqList;
     });
     if (!hasItem) {
