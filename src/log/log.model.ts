@@ -507,21 +507,30 @@ export class VConsoleLogModel extends VConsoleModel {
       // 使用配置中的上传端点
       const UPLOAD_ENDPOINT = logOptions?.uploadUrl;
 
-      // 发送到服务器
-      const response = await fetch(UPLOAD_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ extra: compressedData }),
+      // 使用 XMLHttpRequest 发送到服务器
+      const result = await new Promise<{code: number; message?: string; data: {id: string}}>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', UPLOAD_ENDPOINT);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = () => {
+          if (xhr.status === 200 || xhr.status === 201) {
+            try {
+              const response = JSON.parse(xhr.responseText);
+              resolve(response);
+            } catch (e) {
+              reject(new Error('解析响应失败'));
+            }
+          } else {
+            reject(new Error(`上传失败: ${xhr.status}`));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error('网络错误'));
+        xhr.send(JSON.stringify({ extra: compressedData }));
       });
 
-      if (!response.ok) {
-        throw new Error(`上传失败: ${response.status}`);
-      }
-
-      const result = await response.json();
-      if (result.code !== 200) {
+      if (result.code !== 200 && result.code !== 201) { // 修改这里以处理 201 状态码
         throw new Error(`上传失败: ${result.message || "未知错误"}`);
       }
 

@@ -7,7 +7,7 @@ export interface VConsoleLogOptions {
   maxLogNumber?: number;
   showTimestamps?: boolean;
   exportMethod?: string[]
-  uploadUrlReg?: RegExp;
+  uploadUrl?: string;
   showUrl?:string
 }
 
