@@ -14,6 +14,7 @@
       copied = true;
       setTimeout(() => {
         copied = false;
+        onClose(); // 复制完成后关闭模态框
       }, 2000);
     }
   }
